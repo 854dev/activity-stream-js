@@ -1,4 +1,4 @@
-import { greet } from "./main";
+import { greet } from "../src/main";
 
 test("the data is peanut butter", () => {
   expect(1).toBe(1);
