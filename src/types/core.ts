@@ -67,7 +67,7 @@ interface AsCore {
  * 액티비티 나타내는 기본 인터페이스
  * @see https://www.w3.org/TR/activitystreams-core
  */
-export interface CoreActivity extends AsCore {
+export interface AsActivity extends AsCore {
   type: ActivityType;
   summary?: string;
   actor?: string | AsObject | AsLink;
@@ -114,6 +114,7 @@ export interface AsObject extends AsCore {
  * 다른 라이브러리 Link와 이름 충돌문제로 AsLink로 명명
  */
 export interface AsLink extends AsCore {
+  type: "Link" | string;
   href: string;
   rel?: string;
   mediaType?: string;
@@ -129,6 +130,19 @@ export interface AsLink extends AsCore {
  */
 export interface Image extends AsLink {
   type: "Image";
+}
+
+/**
+ * 액티비티 스트림의 컬렉션
+ * @see https://www.w3.org/TR/activitystreams-vocabulary/#dfn-collection
+ */
+export interface AsCollection extends AsObject {
+  type: "Collection";
+  totalItems?: number;
+  current?: AsLink;
+  first?: AsLink;
+  last?: AsLink;
+  items?: AsObject[] | AsLink[];
 }
 
 /**
