@@ -122,27 +122,3 @@ export interface AsActivity {
   // published?: string; // xsd:dateTime
 }
 
-/**
- * 이미지 오브젝트
- */
-export interface Image extends AsLink {
-  type: "Image";
-  href: string;
-  height?: number;
-  width?: number;
-  name?: string;
-  preview?: Image;
-}
-
-/**
- * 액티비티 스트림의 컬렉션
- * @see https://www.w3.org/TR/activitystreams-vocabulary/#dfn-collection
- */
-export interface AsCollection extends AsObject {
-  type: "Collection";
-  totalItems?: number;
-  current?: AsLink;
-  first?: AsLink;
-  last?: AsLink;
-  items?: AsObject[] | AsLink[];
-}
