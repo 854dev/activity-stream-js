@@ -1,3 +1,8 @@
+/**
+ * @file activity-stream/types/core.ts
+ * 핵심 타입인 Actor, Object, Activity, Link, Collection 등의 타입 정의
+ */
+
 export type CoreType =
   | "Object"
   | "Link"
@@ -54,22 +59,12 @@ export type ActivityType =
   | "View";
 
 /**
- * @see https://www.w3.org/TR/activitystreams-core
- * id, type, @context 를 갖는 액티비트스팀 Core properties
- */
-interface AsCore {
-  "@context": "https://www.w3.org/ns/activitystreams"; // fixed
-  type: string; // any URI
-  id: string; // any URI
-}
-
-/**
  * Link
  * 이미지 링크, 웹페이지 링크 등
  * @see https://www.w3.org/TR/activitystreams-vocabulary/#dfn-link
  * 다른 라이브러리 Link와 이름 충돌문제로 AsLink로 명명
  */
-export interface AsLink extends AsCore {
+export interface AsLink {
   type: "Link" | string;
   href: string;
   rel?: string;
@@ -87,43 +82,44 @@ export interface AsLink extends AsCore {
  * 오브젝트의 구현체는 이 인터페이스를 사용하지 않고, 이 인터페이스를 상속한 확장 오브젝트 타입을 사용
  * @see https://www.w3.org/TR/activitystreams-vocabulary/#dfn-object
  */
-export interface AsObject extends AsCore {
-  subject?: AsObject | AsLink;
-  relationship?: AsObject | AsLink;
-  actor?: AsObject | AsLink;
-  attributedTo?: AsObject | AsLink;
-  attachment?: AsObject | AsLink;
-  attachments?: AsObject[] | AsLink[];
-  audience?: AsObject | AsLink;
+export interface AsObject {
+  id?: string;
+  type?: "Object" | ObjectType | string;
+  // subject?: AsObject | AsLink;
+  // relationship?: AsObject | AsLink;
+  actor?: AsObject;
+  // attributedTo?: AsObject | AsLink;
+  // attachment?: AsObject | AsLink;
+  attachments?: AsLink[];
+  // audience?: AsObject | AsLink;
   content?: string;
-  context?: AsObject | AsLink;
+  // context?: AsObject | AsLink;
   name?: string; // non-html text
-  endTime?: string; // xsd:dateTime
-  generator?: AsObject | AsLink;
-  icon?: Image | AsLink | string;
-  image?: Image | AsLink | string;
+  // endTime?: string; // xsd:dateTime
+  // generator?: AsObject | AsLink;
+  icon?: string;
+  image?: string;
   inReplyTo?: AsObject | AsLink;
-  location?: AsObject | AsLink;
-  preview?: AsObject | AsLink;
-  published?: string; // xsd:dateTime
+  // location?: AsObject | AsLink;
+  // preview?: AsObject | AsLink;
+  // published?: string; // xsd:dateTime
   replies?: AsObject | AsLink;
 }
-
 
 /**
  * 액티비티 나타내는 기본 인터페이스
  * @see https://www.w3.org/TR/activitystreams-core
  */
-export interface AsActivity extends AsCore {
+export interface AsActivity {
   type: ActivityType;
   summary?: string;
-  actor?: string | AsObject | AsLink;
-  object?: string | AsObject | AsLink;
-  target?: string | AsObject | AsLink;
-  result?: string | AsObject | AsLink;
-  origin?: string | AsObject | AsLink;
-  instrument?: string | AsObject | AsLink;
-  published?: string; // xsd:dateTime
+  actor?: AsObject;
+  object?: AsObject;
+  target?: AsObject;
+  result?: AsObject;
+  // origin?: string | AsObject | AsLink;
+  // instrument?: string | AsObject | AsLink;
+  // published?: string; // xsd:dateTime
 }
 
 /**
@@ -150,37 +146,3 @@ export interface AsCollection extends AsObject {
   last?: AsLink;
   items?: AsObject[] | AsLink[];
 }
-
-/**
- * object 인터페이스에서 CoreObject의 type, @context, id 제거한 인터페이스
- * @see https://www.w3.org/TR/activitystreams-vocabulary/#dfn-object
- */
-export type AsObjectWithoutCoreProps<T = AsObject> = Omit<
-  T,
-  "type" | "context" | "id"
->;
-
-/**
- * object 의 날짜 필드 이름
- * 생성일, 수정일, 삭제일
- * xsd:dateTime 형식
- * @see https://www.w3.org/TR/activitystreams-vocabulary/#dfn-object
- */
-type PublishDate = {
-  createdAt: string;
-  updatedAt?: string;
-  deletedAt?: string;
-};
-
-export type WithPublishDate<T = AsObject> = T & PublishDate;
-
-/**
- * 시작시간, 종료시간, 기간
- */
-type Interval = {
-  startTime?: string;
-  endTime?: string;
-  duration?: string;
-};
-
-export type WithInterval<T = AsObject> = T & Interval;
