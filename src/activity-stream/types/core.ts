@@ -64,24 +64,25 @@ interface AsCore {
 }
 
 /**
- * 액티비티 나타내는 기본 인터페이스
- * @see https://www.w3.org/TR/activitystreams-core
+ * Link
+ * 이미지 링크, 웹페이지 링크 등
+ * @see https://www.w3.org/TR/activitystreams-vocabulary/#dfn-link
+ * 다른 라이브러리 Link와 이름 충돌문제로 AsLink로 명명
  */
-export interface AsActivity extends AsCore {
-  type: ActivityType;
-  summary?: string;
-  actor?: string | AsObject | AsLink;
-  object?: string | AsObject | AsLink;
-  target?: string | AsObject | AsLink;
-  result?: string | AsObject | AsLink;
-  origin?: string | AsObject | AsLink;
-  instrument?: string | AsObject | AsLink;
-  published?: string; // xsd:dateTime
+export interface AsLink extends AsCore {
+  type: "Link" | string;
+  href: string;
+  rel?: string;
+  mediaType?: string;
+  name?: string;
+  hreflang?: string;
+  height?: number;
+  width?: number;
+  preview?: AsLink;
 }
 
 /**
  * JS Object와 충돌 피하기 위해 AsObject로 명명
- * ./types/ext-object-type.ts 에서 확장 오브젝트 타입을 정의
  * 확장 오브젝트 타입은 Note, Article, Event 등이 있음
  * 오브젝트의 구현체는 이 인터페이스를 사용하지 않고, 이 인터페이스를 상속한 확장 오브젝트 타입을 사용
  * @see https://www.w3.org/TR/activitystreams-vocabulary/#dfn-object
@@ -108,21 +109,21 @@ export interface AsObject extends AsCore {
   replies?: AsObject | AsLink;
 }
 
+
 /**
- * Link
- * @see https://www.w3.org/TR/activitystreams-vocabulary/#dfn-link
- * 다른 라이브러리 Link와 이름 충돌문제로 AsLink로 명명
+ * 액티비티 나타내는 기본 인터페이스
+ * @see https://www.w3.org/TR/activitystreams-core
  */
-export interface AsLink extends AsCore {
-  type: "Link" | string;
-  href: string;
-  rel?: string;
-  mediaType?: string;
-  name?: string;
-  hreflang?: string;
-  height?: number;
-  width?: number;
-  preview?: AsLink;
+export interface AsActivity extends AsCore {
+  type: ActivityType;
+  summary?: string;
+  actor?: string | AsObject | AsLink;
+  object?: string | AsObject | AsLink;
+  target?: string | AsObject | AsLink;
+  result?: string | AsObject | AsLink;
+  origin?: string | AsObject | AsLink;
+  instrument?: string | AsObject | AsLink;
+  published?: string; // xsd:dateTime
 }
 
 /**
@@ -130,6 +131,11 @@ export interface AsLink extends AsCore {
  */
 export interface Image extends AsLink {
   type: "Image";
+  href: string;
+  height?: number;
+  width?: number;
+  name?: string;
+  preview?: Image;
 }
 
 /**
@@ -161,9 +167,9 @@ export type AsObjectWithoutCoreProps<T = AsObject> = Omit<
  * @see https://www.w3.org/TR/activitystreams-vocabulary/#dfn-object
  */
 type PublishDate = {
-  published: string;
-  updated?: string;
-  deleted?: string;
+  createdAt: string;
+  updatedAt?: string;
+  deletedAt?: string;
 };
 
 export type WithPublishDate<T = AsObject> = T & PublishDate;
