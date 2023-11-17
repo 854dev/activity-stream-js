@@ -20,7 +20,7 @@ export type AsObjectWithoutCoreProps<T = AsObject> = Omit<
  * xsd:dateTime 형식
  * @see https://www.w3.org/TR/activitystreams-vocabulary/#dfn-object
  */
-type PublishDate = {
+export type PublishDate = {
   createdAt: string;
   updatedAt?: string;
   deletedAt?: string;
@@ -31,7 +31,7 @@ export type WithPublishDate<T = AsObject> = T & PublishDate;
 /**
  * 시작시간, 종료시간, 기간
  */
-type Interval = {
+export type Interval = {
   startTime?: string;
   endTime?: string;
   duration?: string;
