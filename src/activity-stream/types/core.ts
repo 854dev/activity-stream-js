@@ -99,11 +99,11 @@ export interface AsObject {
   // generator?: AsObject | AsLink;
   icon?: string;
   image?: string;
-  inReplyTo?: AsObject | AsLink;
+  inReplyTo?: string | AsObject | AsLink;
   // location?: AsObject | AsLink;
   // preview?: AsObject | AsLink;
   // published?: string; // xsd:dateTime
-  replies?: AsObject | AsLink;
+  replies?: (AsObject | AsLink)[];
 }
 
 /**
