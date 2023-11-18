@@ -2,34 +2,28 @@
  * Object service
  * 오브젝트 객체의 생성, 수정, 삭제, 조회를 담당하는 서비스
  */
-
-import { nanoid } from "nanoid";
+import { Timestamp, deleteDoc, doc, setDoc } from "firebase/firestore";
 import { AsObject } from "../../activity-stream/types/core";
 import { WithPublishDate } from "../../activity-stream/types/util";
+import { firebaseDB } from "./config/init";
+import COLLECTION_NAME from "./config/collection-name";
+
+type publishibleObject = WithPublishDate<AsObject>;
 
 const objectService = {
   /**
    * Create object
    */
-  create: (target: AsObject) => {
-    // 타겟 오브젝트 복사.
-    //  createdAt 등 날짜 추가시 사용
-    const result = { ...target } as WithPublishDate<AsObject>;
+  create: async (target: AsObject) => {
+    const result = target as publishibleObject;
 
-    // id프로퍼티 없을 시 생성
-    if (!result.id) {
-      target.id = nanoid();
-    }
-
-    // 날짜 프로퍼티 없을 시 생성
-    if (!result.createdAt) {
-      result.createdAt = new Date().toISOString();
-    }
+    // 게시글 작성 시간을 firebase Timestamp에서 ISOString으로 변환하여
+    result.createdAt = Timestamp.now().toDate().toISOString();
 
     // 오브젝트를 저장하고, 생성된 오브젝트를 반환
     // 반환된 오브젝트는 id프로퍼티가 존재해야 함
-
-    return;
+    const noteRef = doc(firebaseDB, COLLECTION_NAME.OBJECT);
+    return setDoc(noteRef, result);
   },
 
   /**
@@ -42,15 +36,25 @@ const objectService = {
   /**
    * Update object
    */
-  update: () => {
-    return;
+  update: (id: string, target: AsObject) => {
+    const result = target as publishibleObject;
+
+    // 게시글 작성 시간을 firebase Timestamp에서 ISOString으로 변환하여
+    result.updatedAt = Timestamp.now().toDate().toISOString();
+
+    // 오브젝트를 저장하고, 생성된 오브젝트를 반환
+    // 반환된 오브젝트는 id프로퍼티가 존재해야 함
+    const noteRef = doc(firebaseDB, COLLECTION_NAME.OBJECT, id);
+    return setDoc(noteRef, result);
   },
 
   /**
    * Delete object
    */
-  delete: () => {
-    return;
+  delete: async (id: string) => {
+    const collectionToGet = COLLECTION_NAME.OBJECT;
+    const objRef = doc(firebaseDB, collectionToGet, id);
+    return deleteDoc(objRef);
   },
 };
 
