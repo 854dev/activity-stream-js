@@ -6,6 +6,8 @@ import { AsLink, AsObject } from "../types/core";
  */
 export interface AsCollection<Item = AsObject> extends AsObject {
   type: "Collection";
+  attributedTo?: string | AsLink | AsObject;
+  name?: string;
   totalItems?: number;
   current?: string | AsLink;
   first?: AsLink;
