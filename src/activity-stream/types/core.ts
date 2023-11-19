@@ -87,7 +87,7 @@ export interface AsObject {
   type?: "Object" | ObjectType | string;
   // subject?: AsObject | AsLink;
   // relationship?: AsObject | AsLink;
-  actor?: AsObject;
+  actor?: string | AsObject;
   attributedTo?: string | AsObject | AsLink;
   // attachment?: AsObject | AsLink;
   attachments?: AsLink[];
