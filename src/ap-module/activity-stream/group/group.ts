@@ -19,40 +19,49 @@ import { AsObject } from "../types/core";
  */
 export interface AsGroup extends WithPublishDate<AsObject> {
   id: string;
-  type: "Group";
+  type: 'Group';
   name: string;
-  content: string; // HTML content
-  image: string;
-  actor: AsObject;
-  replies: AsObject[];
-  inReplyTo: string | AsObject;
+  summary?: string; // HTML content
+  image?: string;
+  bannerImage?: string[];
 }
 
-class Group implements AsGroup {
+export interface AsGroupConstructor {
   id: string;
-  type: "Group" = "Group";
   name: string;
-  content: string;
-  image: string;
-  actor: AsObject;
-  replies: AsObject[];
-  inReplyTo: string | AsObject;
+  summary?: string;
+  image?: string;
+  bannerImage?: string[];
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
+}
+
+class ASGroup implements AsGroup {
+  id: string;
+  type: 'Group' = 'Group';
+  name: string;
   createdAt: string;
+  summary?: string;
+  image?: string;
+  bannerImage?: string[];
   updatedAt?: string;
   deletedAt?: string;
 
-  constructor(params: AsGroup) {
+  constructor(params: AsGroupConstructor) {
     this.id = params.id;
     this.name = params.name;
-    this.content = params.content;
+    this.createdAt = params.createdAt ?? new Date().toISOString();
+
+    /**
+     * optional properties
+     */
+    this.summary = params.summary;
     this.image = params.image;
-    this.actor = params.actor;
-    this.replies = params.replies;
-    this.inReplyTo = params.inReplyTo;
-    this.createdAt = params.createdAt;
     this.updatedAt = params.updatedAt;
     this.deletedAt = params.deletedAt;
+    this.bannerImage = params.bannerImage;
   }
 }
 
-export default Group;
+export default ASGroup;

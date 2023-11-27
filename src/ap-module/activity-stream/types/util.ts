@@ -21,9 +21,9 @@ export type AsObjectWithoutCoreProps<T = AsObject> = Omit<
  * @see https://www.w3.org/TR/activitystreams-vocabulary/#dfn-object
  */
 export type PublishDate = {
-  createdAt: string;
-  updatedAt?: string;
-  deletedAt?: string;
+  createdAt?: string;
+  updatedAt?: string | null;
+  deletedAt?: string | null;
 };
 
 export type WithPublishDate<T = AsObject> = T & PublishDate;
